@@ -1,0 +1,11 @@
+apiVersion: postgresql.cnpg.io/v1
+kind: Cluster
+metadata:
+  name: repro
+spec:
+  instances: 2
+  imageName: ghcr.io/cloudnative-pg/postgresql:18.0-minimal-trixie
+  primaryUpdateStrategy: supervised
+  primaryUpdateMethod: switchover
+  storage:
+    size: 1Gi
