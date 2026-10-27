@@ -1686,7 +1686,10 @@ func (cluster *Cluster) SetAdmissionError(msg string) {
 		return
 	}
 
-	cluster.Status.PhaseReason = ""
+	// Only clear the reason recorded above: other phases own their reason
+	if cluster.Status.Phase == PhaseDefinitionInvalid {
+		cluster.Status.PhaseReason = ""
+	}
 }
 
 // GetAdmissionError always returns an empty string: the Cluster encodes the

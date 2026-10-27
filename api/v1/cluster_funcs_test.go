@@ -1920,6 +1920,21 @@ var _ = Describe("Cluster admission error", func() {
 		Expect(readyCondition).NotTo(BeNil())
 		Expect(readyCondition.Status).To(Equal(metav1.ConditionFalse))
 	})
+
+	It("clears the reason it recorded once the definition is valid", func() {
+		cluster := &Cluster{}
+		cluster.SetAdmissionError("boom")
+		cluster.SetAdmissionError("")
+		Expect(cluster.Status.PhaseReason).To(BeEmpty())
+	})
+
+	It("keeps the reason of other phases", func() {
+		cluster := &Cluster{}
+		cluster.Status.Phase = PhaseWaitingForUser
+		cluster.Status.PhaseReason = "User must issue a supervised switchover"
+		cluster.SetAdmissionError("")
+		Expect(cluster.Status.PhaseReason).To(Equal("User must issue a supervised switchover"))
+	})
 })
 
 var _ = Describe("IsInitialized", func() {
